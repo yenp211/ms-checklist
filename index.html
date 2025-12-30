@@ -263,11 +263,11 @@
             "週 BOSS ", 
             "大怪公", 
             "下水道 & 跳旗", 
-            "SHARED_紅月",        // 同步
+            "SHARED_紅月",        
             "高山/安格洛公司", 
             "師徒", 
             "六轉碎片兌換(師徒/紅月)", 
-            "SHARED_耶芙尼亞-沙漏(10/10)", // 同步
+            "SHARED_耶芙尼亞-沙漏(10/10)", 
             "覺醒時間之力(恢復*3、附加*3)"
         ],
         monthly: ["HD 傳說捲", "里程靠賽", "老黑"]
@@ -332,11 +332,16 @@
     }
 
     function fullReset() {
-        if(confirm('確定要重置目前伺服器的進度嗎？(紅月與沙漏也會被重置)')) {
+        if(confirm('確定要重置目前伺服器的進度嗎？(包含 HAPPY DAY 等同步項目)')) {
+            // 清除各伺服器獨立進度
             localStorage.removeItem(`maple_premium_v3_${curSvr}_daily`);
             localStorage.removeItem(`maple_premium_v3_${curSvr}_weekly`);
             localStorage.removeItem(`maple_premium_v3_${curSvr}_monthly`);
+            
+            // 清除同步項目
+            localStorage.removeItem(`maple_premium_shared_daily`);
             localStorage.removeItem(`maple_premium_shared_weekly`);
+            
             render();
         }
     }
@@ -346,4 +351,3 @@
 
 </body>
 </html>
-
