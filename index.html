@@ -56,21 +56,8 @@
             }
         }
 
-        .brand h1 {
-            font-size: 20px;
-            font-weight: 300;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            margin: 0;
-            color: var(--accent-dark);
-        }
-
-        .brand p {
-            font-size: 10px;
-            letter-spacing: 1px;
-            color: var(--text-muted);
-            margin: 5px 0 0 0;
-        }
+        .brand h1 { font-size: 20px; font-weight: 300; letter-spacing: 3px; text-transform: uppercase; margin: 0; color: var(--accent-dark); }
+        .brand p { font-size: 10px; letter-spacing: 1px; color: var(--text-muted); margin: 5px 0 0 0; }
 
         .server-selector {
             background: #fdfdfd;
@@ -92,11 +79,7 @@
             transition: all 0.3s;
         }
 
-        .server-btn.active {
-            background: var(--accent-soft);
-            color: var(--accent-dark);
-            font-weight: bold;
-        }
+        .server-btn.active { background: var(--accent-soft); color: var(--accent-dark); font-weight: bold; }
 
         .status-summary {
             display: flex;
@@ -107,58 +90,15 @@
             padding-bottom: 20px;
         }
 
-        .perc-number {
-            font-size: 48px;
-            font-weight: 200;
-            color: var(--accent-dark);
-            min-width: 90px;
-            line-height: 1;
-        }
+        .perc-number { font-size: 48px; font-weight: 200; color: var(--accent-dark); min-width: 90px; line-height: 1; }
+        .progress-track { flex-grow: 1; height: 3px; background: #eee; position: relative; }
+        #bar-fill { position: absolute; height: 100%; width: 0%; background: var(--accent-dark); transition: width 1.2s ease; }
 
-        .progress-track {
-            flex-grow: 1;
-            height: 3px;
-            background: #eee;
-            position: relative;
-        }
+        .task-grid { display: grid; grid-template-columns: 1fr; gap: 30px; }
+        @media (min-width: 768px) { .task-grid { grid-template-columns: repeat(3, 1fr); gap: 35px; } }
 
-        #bar-fill {
-            position: absolute;
-            height: 100%;
-            width: 0%;
-            background: var(--accent-dark);
-            transition: width 1.2s ease;
-        }
-
-        .task-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 30px;
-        }
-
-        @media (min-width: 768px) {
-            .task-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 35px;
-            }
-        }
-
-        h2 {
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: var(--accent-dark);
-            margin-bottom: 15px;
-            border-left: 3px solid var(--accent-champagne);
-            padding-left: 10px;
-        }
-
-        .task-column {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
+        h2 { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-dark); margin-bottom: 15px; border-left: 3px solid var(--accent-champagne); padding-left: 10px; }
+        .task-column { display: flex; flex-direction: column; gap: 5px; }
 
         .task-item {
             display: flex;
@@ -168,49 +108,14 @@
             border-bottom: 1px solid #f9f9f9;
             transition: all 0.2s;
         }
+        .task-item:active { background-color: #fcfcfc; }
+        .task-item span { font-size: 14px; letter-spacing: 0.5px; }
+        .indicator { width: 16px; height: 16px; border: 1px solid var(--accent-champagne); border-radius: 50%; margin-right: 12px; flex-shrink: 0; }
+        .done .indicator { background: var(--accent-champagne); box-shadow: 0 2px 5px rgba(220, 211, 204, 0.4); }
+        .done span { color: var(--text-muted); text-decoration: line-through; }
 
-        .task-item:active {
-            background-color: #fcfcfc;
-        }
-
-        .task-item span {
-            font-size: 14px;
-            letter-spacing: 0.5px;
-        }
-
-        .indicator {
-            width: 16px;
-            height: 16px;
-            border: 1px solid var(--accent-champagne);
-            border-radius: 50%;
-            margin-right: 12px;
-            flex-shrink: 0;
-        }
-
-        .done .indicator {
-            background: var(--accent-champagne);
-            box-shadow: 0 2px 5px rgba(220, 211, 204, 0.4);
-        }
-
-        .done span {
-            color: var(--text-muted);
-            text-decoration: line-through;
-        }
-
-        .footer {
-            margin-top: 40px;
-            text-align: center;
-            padding-bottom: 10px;
-        }
-
-        .reset-btn {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-size: 11px;
-            text-decoration: underline;
-            cursor: pointer;
-        }
+        .footer { margin-top: 40px; text-align: center; padding-bottom: 10px; }
+        .reset-btn { background: none; border: none; color: var(--text-muted); font-size: 11px; text-decoration: underline; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -256,7 +161,7 @@
 
 <script>
     let curSvr = 'ellia';
-    // 只有帶有 SHARED_ 前綴的項目會跨伺服器同步
+    // 更新清單：加上了 SHARED_ 前綴
     const tasks = {
         daily: ["ARC/AUT", "SHARED_HAPPY DAY", "小怪公", "坐牢半小時", "SHARED_耶芙尼亞考察", "頂培"],
         weekly: [
@@ -270,7 +175,7 @@
             "SHARED_耶芙尼亞-沙漏(10/10)", 
             "覺醒時間之力(恢復*3、附加*3)"
         ],
-        monthly: ["HD 傳說捲", "里程靠賽", "老黑"]
+        monthly: ["SHARED_HD 傳說捲", "SHARED_里程靠賽", "老黑"]
     };
 
     function switchSvr(s) {
@@ -282,23 +187,15 @@
 
     function renderSection(type, listId) {
         const listDiv = document.getElementById(listId);
-        
         listDiv.innerHTML = tasks[type].map((t, i) => {
             const isShared = t.includes("SHARED_");
             const displayName = t.replace("SHARED_", "");
             const storageKey = isShared 
                 ? `maple_premium_shared_${type}` 
                 : `maple_premium_v3_${curSvr}_${type}`;
-            
             const data = JSON.parse(localStorage.getItem(storageKey)) || {};
             const isDone = data[isShared ? t : i] ? 'done' : '';
-            
-            return `
-                <div class="task-item ${isDone}" onclick="toggle('${storageKey}', ${isShared ? `'${t}'` : i})">
-                    <div class="indicator"></div>
-                    <span>${displayName}</span>
-                </div>
-            `;
+            return `<div class="task-item ${isDone}" onclick="toggle('${storageKey}', ${isShared ? `'${t}'` : i})"><div class="indicator"></div><span>${displayName}</span></div>`;
         }).join('');
         
         let doneCount = 0;
@@ -315,11 +212,9 @@
         const dDone = renderSection('daily', 'list-daily');
         const wDone = renderSection('weekly', 'list-weekly');
         const mDone = renderSection('monthly', 'list-monthly');
-        
         const total = tasks.daily.length + tasks.weekly.length + tasks.monthly.length;
         const done = dDone + wDone + mDone;
         const p = Math.round((done / total) * 100);
-        
         document.getElementById('bar-fill').style.width = p + '%';
         document.getElementById('perc-text').innerText = p + '%';
     }
@@ -332,15 +227,15 @@
     }
 
     function fullReset() {
-        if(confirm('確定要重置目前伺服器的進度嗎？(包含 HAPPY DAY 等同步項目)')) {
-            // 清除各伺服器獨立進度
+        if(confirm('確定要重置進度嗎？(包含同步項目)')) {
             localStorage.removeItem(`maple_premium_v3_${curSvr}_daily`);
             localStorage.removeItem(`maple_premium_v3_${curSvr}_weekly`);
             localStorage.removeItem(`maple_premium_v3_${curSvr}_monthly`);
             
-            // 清除同步項目
+            // 重要：同步項目的清除
             localStorage.removeItem(`maple_premium_shared_daily`);
             localStorage.removeItem(`maple_premium_shared_weekly`);
+            localStorage.removeItem(`maple_premium_shared_monthly`); // 新增這一行！
             
             render();
         }
