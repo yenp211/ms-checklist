@@ -47,7 +47,6 @@
             text-align: center;
         }
 
-        /* 電腦版 header 排版 */
         @media (min-width: 768px) {
             header {
                 flex-direction: row;
@@ -131,7 +130,6 @@
             transition: width 1.2s ease;
         }
 
-        /* 任務網格：手機 1 欄，電腦 3 欄 */
         .task-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -258,9 +256,20 @@
 
 <script>
     let curSvr = 'ellia';
+    // 只有帶有 SHARED_ 前綴的項目會跨伺服器同步
     const tasks = {
-        daily: ["ARC/AUT", "HAPPY DAY", "小怪公", "坐牢半小時", "天狗", "耶芙尼亞考察", "頂培"],
-        weekly: ["週 BOSS ", "大怪公", "下水道 & 跳旗", "紅月(商店碎片)", "師徒(商店碎片)", "耶芙尼亞-沙漏(10/10)","覺醒時間之力(恢復*3、附加*3)"],
+        daily: ["ARC/AUT", "HAPPY DAY", "小怪公", "坐牢半小時", "耶芙尼亞考察", "頂培"],
+        weekly: [
+            "週 BOSS ", 
+            "大怪公", 
+            "下水道 & 跳旗", 
+            "SHARED_紅月",        // 同步
+            "高山/安格洛公司", 
+            "師徒", 
+            "六轉碎片兌換(師徒/紅月)", 
+            "SHARED_耶芙尼亞-沙漏(10/10)", // 同步
+            "覺醒時間之力(恢復*3、附加*3)"
+        ],
         monthly: ["HD 傳說捲", "里程靠賽", "老黑"]
     };
 
@@ -273,17 +282,33 @@
 
     function renderSection(type, listId) {
         const listDiv = document.getElementById(listId);
-        const storageKey = `maple_premium_v3_${curSvr}_${type}`;
-        const data = JSON.parse(localStorage.getItem(storageKey)) || {};
         
-        listDiv.innerHTML = tasks[type].map((t, i) => `
-            <div class="task-item ${data[i] ? 'done' : ''}" onclick="toggle('${storageKey}', ${i})">
-                <div class="indicator"></div>
-                <span>${t}</span>
-            </div>
-        `).join('');
+        listDiv.innerHTML = tasks[type].map((t, i) => {
+            const isShared = t.includes("SHARED_");
+            const displayName = t.replace("SHARED_", "");
+            const storageKey = isShared 
+                ? `maple_premium_shared_${type}` 
+                : `maple_premium_v3_${curSvr}_${type}`;
+            
+            const data = JSON.parse(localStorage.getItem(storageKey)) || {};
+            const isDone = data[isShared ? t : i] ? 'done' : '';
+            
+            return `
+                <div class="task-item ${isDone}" onclick="toggle('${storageKey}', ${isShared ? `'${t}'` : i})">
+                    <div class="indicator"></div>
+                    <span>${displayName}</span>
+                </div>
+            `;
+        }).join('');
         
-        return Object.values(data).filter(Boolean).length;
+        let doneCount = 0;
+        tasks[type].forEach((t, i) => {
+            const isShared = t.includes("SHARED_");
+            const storageKey = isShared ? `maple_premium_shared_${type}` : `maple_premium_v3_${curSvr}_${type}`;
+            const data = JSON.parse(localStorage.getItem(storageKey)) || {};
+            if (data[isShared ? t : i]) doneCount++;
+        });
+        return doneCount;
     }
 
     function render() {
@@ -307,10 +332,11 @@
     }
 
     function fullReset() {
-        if(confirm('確定要重置目前伺服器的進度嗎？')) {
+        if(confirm('確定要重置目前伺服器的進度嗎？(紅月與沙漏也會被重置)')) {
             localStorage.removeItem(`maple_premium_v3_${curSvr}_daily`);
             localStorage.removeItem(`maple_premium_v3_${curSvr}_weekly`);
             localStorage.removeItem(`maple_premium_v3_${curSvr}_monthly`);
+            localStorage.removeItem(`maple_premium_shared_weekly`);
             render();
         }
     }
@@ -319,5 +345,4 @@
 </script>
 
 </body>
-
 </html>
