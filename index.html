@@ -5,115 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Maple Premium Dashboard</title>
     <style>
-        :root {
-            --bg-base: #f8f6f4;
-            --card-white: #ffffff;
-            --accent-champagne: #dcd3cc;
-            --accent-dark: #8e8279;
-            --text-main: #4a4a4a;
-            --text-muted: #b5ada7;
-            --accent-soft: #f0edea;
-        }
-
-        body {
-            margin: 0;
-            padding: 15px;
-            font-family: 'Optima', 'Palatino', 'PingFang TC', 'Heiti TC', sans-serif;
-            background-color: var(--bg-base);
-            color: var(--text-main);
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
-        }
-
-        .dashboard {
-            width: 100%;
-            max-width: 900px;
-            background: var(--card-white);
-            padding: 30px 20px;
-            border-radius: 25px;
-            box-shadow: 0 20px 50px rgba(142, 130, 121, 0.08);
-            box-sizing: border-box;
-            margin-top: 10px;
-        }
-
-        header {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 30px;
-            text-align: center;
-        }
-
-        @media (min-width: 768px) {
-            header {
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: flex-end;
-                text-align: left;
-            }
-        }
-
+        /* (樣式部分保持不變) */
+        :root { --bg-base: #f8f6f4; --card-white: #ffffff; --accent-champagne: #dcd3cc; --accent-dark: #8e8279; --text-main: #4a4a4a; --text-muted: #b5ada7; --accent-soft: #f0edea; }
+        body { margin: 0; padding: 15px; font-family: 'Optima', 'Palatino', 'PingFang TC', 'Heiti TC', sans-serif; background-color: var(--bg-base); color: var(--text-main); display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; }
+        .dashboard { width: 100%; max-width: 900px; background: var(--card-white); padding: 30px 20px; border-radius: 25px; box-shadow: 0 20px 50px rgba(142, 130, 121, 0.08); box-sizing: border-box; margin-top: 10px; }
+        header { display: flex; flex-direction: column; align-items: center; gap: 15px; margin-bottom: 30px; text-align: center; }
+        @media (min-width: 768px) { header { flex-direction: row; justify-content: space-between; align-items: flex-end; text-align: left; } }
         .brand h1 { font-size: 20px; font-weight: 300; letter-spacing: 3px; text-transform: uppercase; margin: 0; color: var(--accent-dark); }
         .brand p { font-size: 10px; letter-spacing: 1px; color: var(--text-muted); margin: 5px 0 0 0; }
-
-        .server-selector {
-            background: #fdfdfd;
-            border: 1px solid #eee;
-            padding: 4px;
-            border-radius: 50px;
-            display: flex;
-        }
-
-        .server-btn {
-            padding: 6px 15px;
-            border: none;
-            background: none;
-            cursor: pointer;
-            font-size: 11px;
-            letter-spacing: 1px;
-            border-radius: 50px;
-            color: var(--text-muted);
-            transition: all 0.3s;
-        }
-
+        .server-selector { background: #fdfdfd; border: 1px solid #eee; padding: 4px; border-radius: 50px; display: flex; }
+        .server-btn { padding: 6px 15px; border: none; background: none; cursor: pointer; font-size: 11px; letter-spacing: 1px; border-radius: 50px; color: var(--text-muted); transition: all 0.3s; }
         .server-btn.active { background: var(--accent-soft); color: var(--accent-dark); font-weight: bold; }
-
-        .status-summary {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 30px;
-            border-bottom: 1px solid #f2f0ee;
-            padding-bottom: 20px;
-        }
-
+        .status-summary { display: flex; align-items: center; gap: 15px; margin-bottom: 30px; border-bottom: 1px solid #f2f0ee; padding-bottom: 20px; }
         .perc-number { font-size: 48px; font-weight: 200; color: var(--accent-dark); min-width: 90px; line-height: 1; }
         .progress-track { flex-grow: 1; height: 3px; background: #eee; position: relative; }
         #bar-fill { position: absolute; height: 100%; width: 0%; background: var(--accent-dark); transition: width 1.2s ease; }
-
         .task-grid { display: grid; grid-template-columns: 1fr; gap: 30px; }
         @media (min-width: 768px) { .task-grid { grid-template-columns: repeat(3, 1fr); gap: 35px; } }
-
         h2 { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-dark); margin-bottom: 15px; border-left: 3px solid var(--accent-champagne); padding-left: 10px; }
         .task-column { display: flex; flex-direction: column; gap: 5px; }
-
-        .task-item {
-            display: flex;
-            align-items: center;
-            padding: 12px 5px;
-            cursor: pointer;
-            border-bottom: 1px solid #f9f9f9;
-            transition: all 0.2s;
-        }
+        .task-item { display: flex; align-items: center; padding: 12px 5px; cursor: pointer; border-bottom: 1px solid #f9f9f9; transition: all 0.2s; }
         .task-item:active { background-color: #fcfcfc; }
         .task-item span { font-size: 14px; letter-spacing: 0.5px; }
         .indicator { width: 16px; height: 16px; border: 1px solid var(--accent-champagne); border-radius: 50%; margin-right: 12px; flex-shrink: 0; }
         .done .indicator { background: var(--accent-champagne); box-shadow: 0 2px 5px rgba(220, 211, 204, 0.4); }
         .done span { color: var(--text-muted); text-decoration: line-through; }
-
         .footer { margin-top: 40px; text-align: center; padding-bottom: 10px; }
         .reset-btn { background: none; border: none; color: var(--text-muted); font-size: 11px; text-decoration: underline; cursor: pointer; }
     </style>
@@ -161,22 +77,36 @@
 
 <script>
     let curSvr = 'ellia';
-    // 更新清單：加上了 SHARED_ 前綴
-    const tasks = {
-        daily: ["ARC/AUT", "SHARED_HAPPY DAY", "小怪公", "坐牢半小時", "SHARED_耶芙尼亞考察", "頂培"],
-        weekly: [
-            "週 BOSS ", 
-            "大怪公", 
-            "下水道 & 跳旗", 
-            "SHARED_紅月",        
-            "高山/安格洛公司", 
-            "師徒", 
-            "六轉碎片兌換(師徒/紅月)", 
-            "SHARED_耶芙尼亞-沙漏(10/10)", 
-            "覺醒時間之力(恢復*3、附加*3)"
-        ],
-        monthly: ["SHARED_HD 傳說捲", "SHARED_里程靠賽", "老黑"]
-    };
+
+    // 這裡是核心修改：讓任務清單會根據伺服器動態產生
+    function getTasks() {
+        const isChall = (curSvr === 'chall');
+        
+        return {
+            daily: [
+                "ARC/AUT", 
+                "SHARED_HAPPY DAY", 
+                "小怪公", 
+                "坐牢半小時", 
+                "SHARED_耶芙尼亞考察", 
+                "頂培",
+                ...(isChall ? ["挑戰者1000隻點名"] : []) // 只有挑戰者才加這行
+            ],
+            weekly: [
+                "週 BOSS ", 
+                "大怪公", 
+                "下水道 & 跳旗", 
+                "SHARED_紅月",        
+                "高山/安格洛公司", 
+                "師徒", 
+                "六轉碎片兌換(師徒/紅月)", 
+                "SHARED_耶芙尼亞-沙漏(10/10)", 
+                "覺醒時間之力(恢復*3、附加*3)",
+                ...(isChall ? ["挑戰箱*100"] : []) // 只有挑戰者才加這行
+            ],
+            monthly: ["SHARED_HD 傳說捲", "SHARED_里程靠賽", "老黑"]
+        };
+    }
 
     function switchSvr(s) {
         curSvr = s;
@@ -187,6 +117,8 @@
 
     function renderSection(type, listId) {
         const listDiv = document.getElementById(listId);
+        const tasks = getTasks(); // 取得動態清單
+        
         listDiv.innerHTML = tasks[type].map((t, i) => {
             const isShared = t.includes("SHARED_");
             const displayName = t.replace("SHARED_", "");
@@ -212,6 +144,7 @@
         const dDone = renderSection('daily', 'list-daily');
         const wDone = renderSection('weekly', 'list-weekly');
         const mDone = renderSection('monthly', 'list-monthly');
+        const tasks = getTasks();
         const total = tasks.daily.length + tasks.weekly.length + tasks.monthly.length;
         const done = dDone + wDone + mDone;
         const p = Math.round((done / total) * 100);
@@ -231,12 +164,9 @@
             localStorage.removeItem(`maple_premium_v3_${curSvr}_daily`);
             localStorage.removeItem(`maple_premium_v3_${curSvr}_weekly`);
             localStorage.removeItem(`maple_premium_v3_${curSvr}_monthly`);
-            
-            // 重要：同步項目的清除
             localStorage.removeItem(`maple_premium_shared_daily`);
             localStorage.removeItem(`maple_premium_shared_weekly`);
-            localStorage.removeItem(`maple_premium_shared_monthly`); // 新增這一行！
-            
+            localStorage.removeItem(`maple_premium_shared_monthly`);
             render();
         }
     }
