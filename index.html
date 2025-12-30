@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Maple Premium Dashboard</title>
+    <style>
+        :root {
+            --bg-base: #f8f6f4;
+            --card-white: #ffffff;
+            --accent-champagne: #dcd3cc;
+            --accent-dark: #8e8279;
+            --text-main: #4a4a4a;
+            --text-muted: #b5ada7;
+            --accent-soft: #f0edea;
+        }
+
+        body {
+            margin: 0;
+            padding: 15px;
+            font-family: 'Optima', 'Palatino', 'PingFang TC', 'Heiti TC', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .dashboard {
+            width: 100%;
+            max-width: 900px;
+            background: var(--card-white);
+            padding: 30px 20px;
+            border-radius: 25px;
+            box-shadow: 0 20px 50px rgba(142, 130, 121, 0.08);
+            box-sizing: border-box;
+            margin-top: 10px;
+        }
+
+        header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        /* 電腦版 header 排版 */
+        @media (min-width: 768px) {
+            header {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: flex-end;
+                text-align: left;
+            }
+        }
+
+        .brand h1 {
+            font-size: 20px;
+            font-weight: 300;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin: 0;
+            color: var(--accent-dark);
+        }
+
+        .brand p {
+            font-size: 10px;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin: 5px 0 0 0;
+        }
+
+        .server-selector {
+            background: #fdfdfd;
+            border: 1px solid #eee;
+            padding: 4px;
+            border-radius: 50px;
+            display: flex;
+        }
+
+        .server-btn {
+            padding: 6px 15px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 11px;
+            letter-spacing: 1px;
+            border-radius: 50px;
+            color: var(--text-muted);
+            transition: all 0.3s;
+        }
+
+        .server-btn.active {
+            background: var(--accent-soft);
+            color: var(--accent-dark);
+            font-weight: bold;
+        }
+
+        .status-summary {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #f2f0ee;
+            padding-bottom: 20px;
+        }
+
+        .perc-number {
+            font-size: 48px;
+            font-weight: 200;
+            color: var(--accent-dark);
+            min-width: 90px;
+            line-height: 1;
+        }
+
+        .progress-track {
+            flex-grow: 1;
+            height: 3px;
+            background: #eee;
+            position: relative;
+        }
+
+        #bar-fill {
+            position: absolute;
+            height: 100%;
+            width: 0%;
+            background: var(--accent-dark);
+            transition: width 1.2s ease;
+        }
+
+        /* 任務網格：手機 1 欄，電腦 3 欄 */
+        .task-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+
+        @media (min-width: 768px) {
+            .task-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 35px;
+            }
+        }
+
+        h2 {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--accent-dark);
+            margin-bottom: 15px;
+            border-left: 3px solid var(--accent-champagne);
+            padding-left: 10px;
+        }
+
+        .task-column {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 5px;
+            cursor: pointer;
+            border-bottom: 1px solid #f9f9f9;
+            transition: all 0.2s;
+        }
+
+        .task-item:active {
+            background-color: #fcfcfc;
+        }
+
+        .task-item span {
+            font-size: 14px;
+            letter-spacing: 0.5px;
+        }
+
+        .indicator {
+            width: 16px;
+            height: 16px;
+            border: 1px solid var(--accent-champagne);
+            border-radius: 50%;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+
+        .done .indicator {
+            background: var(--accent-champagne);
+            box-shadow: 0 2px 5px rgba(220, 211, 204, 0.4);
+        }
+
+        .done span {
+            color: var(--text-muted);
+            text-decoration: line-through;
+        }
+
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            padding-bottom: 10px;
+        }
+
+        .reset-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 11px;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard">
+    <header>
+        <div class="brand">
+            <h1>MS寶的CHECKLIST</h1>
+            <p>進度87%以上才有資格稱作MS寶</p>
+        </div>
+        <div class="server-selector">
+            <button class="server-btn active" id="btn-ellia" onclick="switchSvr('ellia')">艾麗亞</button>
+            <button class="server-btn" id="btn-chall" onclick="switchSvr('chall')">挑戰者</button>
+        </div>
+    </header>
+
+    <div class="status-summary">
+        <div class="perc-number" id="perc-text">0%</div>
+        <div class="progress-track">
+            <div id="bar-fill"></div>
+        </div>
+    </div>
+
+    <div class="task-grid">
+        <div class="task-column">
+            <h2>Daily</h2>
+            <div id="list-daily"></div>
+        </div>
+        <div class="task-column">
+            <h2>Weekly</h2>
+            <div id="list-weekly"></div>
+        </div>
+        <div class="task-column">
+            <h2>Monthly</h2>
+            <div id="list-monthly"></div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <button class="reset-btn" onclick="fullReset()">Reset Server Progress</button>
+    </div>
+</div>
+
+<script>
+    let curSvr = 'ellia';
+    const tasks = {
+        daily: ["ARC/AUT", "HAPPY DAY", "小怪公", "坐牢半小時", "天狗", "耶芙尼亞考察", "頂培"],
+        weekly: ["週 BOSS ", "大怪公", "下水道 & 跳旗", "紅月(商店碎片)", "師徒(商店碎片)", "耶芙尼亞-沙漏(10/10)","覺醒時間之力"],
+        monthly: ["HD 傳說捲", "里程靠賽", "老黑"]
+    };
+
+    function switchSvr(s) {
+        curSvr = s;
+        document.getElementById('btn-ellia').classList.toggle('active', s === 'ellia');
+        document.getElementById('btn-chall').classList.toggle('active', s === 'chall');
+        render();
+    }
+
+    function renderSection(type, listId) {
+        const listDiv = document.getElementById(listId);
+        const storageKey = `maple_premium_v3_${curSvr}_${type}`;
+        const data = JSON.parse(localStorage.getItem(storageKey)) || {};
+        
+        listDiv.innerHTML = tasks[type].map((t, i) => `
+            <div class="task-item ${data[i] ? 'done' : ''}" onclick="toggle('${storageKey}', ${i})">
+                <div class="indicator"></div>
+                <span>${t}</span>
+            </div>
+        `).join('');
+        
+        return Object.values(data).filter(Boolean).length;
+    }
+
+    function render() {
+        const dDone = renderSection('daily', 'list-daily');
+        const wDone = renderSection('weekly', 'list-weekly');
+        const mDone = renderSection('monthly', 'list-monthly');
+        
+        const total = tasks.daily.length + tasks.weekly.length + tasks.monthly.length;
+        const done = dDone + wDone + mDone;
+        const p = Math.round((done / total) * 100);
+        
+        document.getElementById('bar-fill').style.width = p + '%';
+        document.getElementById('perc-text').innerText = p + '%';
+    }
+
+    function toggle(key, i) {
+        const data = JSON.parse(localStorage.getItem(key)) || {};
+        data[i] = !data[i];
+        localStorage.setItem(key, JSON.stringify(data));
+        render();
+    }
+
+    function fullReset() {
+        if(confirm('確定要重置目前伺服器的進度嗎？')) {
+            localStorage.removeItem(`maple_premium_v3_${curSvr}_daily`);
+            localStorage.removeItem(`maple_premium_v3_${curSvr}_weekly`);
+            localStorage.removeItem(`maple_premium_v3_${curSvr}_monthly`);
+            render();
+        }
+    }
+
+    render();
+</script>
+
+</body>
+</html>
